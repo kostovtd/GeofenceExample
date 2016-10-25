@@ -92,6 +92,8 @@ public class GoogleLocationApiManager implements GoogleApiClient.ConnectionCallb
             Log.i(TAG, "onConnected: lat " + mLastKnownLocation.getLatitude());
             Log.i(TAG, "onConnected: long " + mLastKnownLocation.getLongitude());
         }
+
+        locationCallback.onLocationApiManagerConnected();
     }
 
 
@@ -155,6 +157,10 @@ public class GoogleLocationApiManager implements GoogleApiClient.ConnectionCallb
                 mGoogleApiClient, this);
     }
 
+
+    public GoogleApiClient getmGoogleApiClient() {
+        return mGoogleApiClient;
+    }
 
     public boolean isConnectionEstanblished() {
         return mGoogleApiClient.isConnected();

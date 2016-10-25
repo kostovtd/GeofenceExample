@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -35,11 +34,13 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        Log.d(TAG, "onHandleIntent(): hit");
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
 
         if(geofencingEvent.hasError()) {
             String errorMsg = getErrorString(geofencingEvent.getErrorCode());
             Log.e(TAG, errorMsg);
+
             return;
         }
 
@@ -48,7 +49,10 @@ public class GeofenceTransitionsIntentService extends IntentService {
         if(geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER ) {
             List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
             String geofenceTransitionDetails = getGeofenceTrasitionDetails(geofenceTransition, triggeringGeofences);
-
+            sendNotification(geofenceTransitionDetails);
+            Log.i(TAG, geofenceTransitionDetails);
+        } else {
+            Log.e(TAG, "Geofence error - invalid type");
         }
     }
 
@@ -89,22 +93,12 @@ public class GeofenceTransitionsIntentService extends IntentService {
     private void sendNotification( String msg ) {
         Log.i(TAG, "sendNotification: " + msg );
 
-        // Intent to start the main Activity
-//        Intent notificationIntent = MainActivity.makeNotificationIntent(
-//                getApplicationContext(), msg
-//        );
-
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(MainActivity.class);
-//        stackBuilder.addNextIntent(notificationIntent);
-        PendingIntent notificationPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
         // Creating and sending Notification
         NotificationManager notificatioMng =
                 (NotificationManager) getSystemService( Context.NOTIFICATION_SERVICE );
         notificatioMng.notify(
                 GEOFENCE_NOTIFICATION_ID,
-                createNotification(msg, notificationPendingIntent));
+                createNotification(msg, null));
     }
 
 
