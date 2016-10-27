@@ -13,6 +13,7 @@ import java.util.List;
 
 public interface MapsView {
 
+    void generateMap();
     void updateLocationOnMap(Location location);
-    void showGeofences(List<LatLng> latLngList);
+    void showGeofences(List<CompanyLocation> companyLocationList);
 }

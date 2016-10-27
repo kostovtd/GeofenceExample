@@ -21,9 +21,7 @@ public class MapsPresenterImpl implements MapsPresenter, LocationCallback, Geofe
     private MapsView view;
     private GoogleLocationApiManager googleLocationApiManager;
     private GeofencingManager geofencingManager;
-
-    private List<Geofence> geofenceList = new ArrayList<>();
-    private List<LatLng> latLngList = new ArrayList<>();
+    private List<CompanyLocation> companyLocationList = new ArrayList<>();
 
     public MapsPresenterImpl(MapsView view, FragmentActivity fragmentActivity, Context context) {
         if(view == null) throw new NullPointerException("view can not be NULL");
@@ -33,15 +31,24 @@ public class MapsPresenterImpl implements MapsPresenter, LocationCallback, Geofe
         this.view = view;
         this.googleLocationApiManager = new GoogleLocationApiManager(fragmentActivity, context);
         this.googleLocationApiManager.setLocationCallback(this);
-        this.googleLocationApiManager.connect();
+
         this.geofencingManager = new GeofencingManager(this.googleLocationApiManager, context);
         this.geofencingManager.setmGeofenceCallback(this);
+
+        this.view.generateMap();
     }
 
 
     @Override
     public void onLocationApiManagerConnected() {
-        fetchGeofences();
+        fetchCompanyLocations();
+
+        List<Geofence> geofenceList = new ArrayList<>();
+        for(CompanyLocation companyLocation : companyLocationList) {
+            geofenceList.add(companyLocation.getGeofence());
+        }
+
+        geofencingManager.addGeofences(geofenceList);
     }
 
     @Override
@@ -59,45 +66,54 @@ public class MapsPresenterImpl implements MapsPresenter, LocationCallback, Geofe
     public void disconnectFromLocationService() {
         Log.d(TAG, "disconnectFromLocationService: hit");
         googleLocationApiManager.disconnect();
+        geofencingManager.removeGeofences();
     }
 
     @Override
-    public void fetchGeofences() {
-        LatLng interExpo = new LatLng(42.64923011, 23.39556813);
-        LatLng metro = new LatLng(42.64685481, 23.39321852);
-        LatLng sirma = new LatLng(42.65430002, 23.39087963);
+    public void fetchCompanyLocations() {
+        LatLng interExpoLatLng = new LatLng(42.64923011, 23.39556813);
+        LatLng metroLatLng = new LatLng(42.64685481, 23.39321852);
+        LatLng sirmaLatLng = new LatLng(42.65430002, 23.39087963);
 
-        latLngList.add(interExpo);
-        latLngList.add(metro);
-        latLngList.add(sirma);
-
-        geofenceList.add(new Geofence.Builder()
+        Geofence interExpoGeofence = new Geofence.Builder()
                 .setRequestId("Inter Expo Center")
-                .setCircularRegion(interExpo.latitude, interExpo.longitude, 100.0f)
+                .setCircularRegion(interExpoLatLng.latitude, interExpoLatLng.longitude, 100.0f)
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
                 .setExpirationDuration(60 * 60 * 1000)
-                .build());
+                .build();
 
-        geofenceList.add(new Geofence.Builder()
+        Geofence metroGeofence = new Geofence.Builder()
                 .setRequestId("Metro")
-                .setCircularRegion(metro.latitude, metro.longitude, 100.0f)
+                .setCircularRegion(metroLatLng.latitude, metroLatLng.longitude, 100.0f)
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
                 .setExpirationDuration(60 * 60 * 1000)
-                .build());
+                .build();
 
-        geofenceList.add(new Geofence.Builder()
+        Geofence sirmaGeofence = new Geofence.Builder()
                 .setRequestId("Sirma")
-                .setCircularRegion(sirma.latitude, sirma.longitude, 100.0f)
+                .setCircularRegion(sirmaLatLng.latitude, sirmaLatLng.longitude, 100.0f)
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
                 .setExpirationDuration(60 * 60 * 1000)
-                .build());
+                .build();
 
-        geofencingManager.addGeofences(geofenceList);
+        CompanyLocation interExpoLocation = new CompanyLocation(interExpoLatLng, interExpoGeofence);
+        CompanyLocation metroLocation = new CompanyLocation(metroLatLng, metroGeofence);
+        CompanyLocation sirmaLocation = new CompanyLocation(sirmaLatLng, sirmaGeofence);
+
+        companyLocationList.add(interExpoLocation);
+        companyLocationList.add(metroLocation);
+        companyLocationList.add(sirmaLocation);
     }
 
 
     @Override
     public void onGeofenceResultAvailable() {
-        view.showGeofences(latLngList);
+        view.showGeofences(companyLocationList);
+    }
+
+
+    @Override
+    public void onMapReady() {
+        googleLocationApiManager.connect();
     }
 }

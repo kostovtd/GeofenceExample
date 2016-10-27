@@ -62,7 +62,14 @@ public class GeofencingManager implements ResultCallback<Status>{
                     getGeofencePendingIntent()
             ).setResultCallback(this);
         }
+    }
 
+
+    public void removeGeofences() {
+        LocationServices.GeofencingApi.removeGeofences(
+                mGoogleLocationApiManager.getmGoogleApiClient(),
+                getGeofencePendingIntent()
+        ).setResultCallback(this);
     }
 
 

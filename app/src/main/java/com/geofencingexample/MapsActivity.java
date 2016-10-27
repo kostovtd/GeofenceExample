@@ -31,10 +31,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-
-        mapFragment.getMapAsync(this);
+        presenter = new MapsPresenterImpl(this, this, this);
     }
 
 
@@ -48,7 +45,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         currentPosition = mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
-        presenter = new MapsPresenterImpl(this, this, this);
+        presenter.onMapReady();
     }
 
     @Override
@@ -63,6 +60,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     @Override
+    public void generateMap() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+
+        mapFragment.getMapAsync(this);
+    }
+
+
+    @Override
     public void updateLocationOnMap(Location location) {
         currentPosition.remove();
         LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
@@ -71,18 +77,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void showGeofences(List<LatLng> latLngList) {
-        for(LatLng latLng : latLngList) {
+    public void showGeofences(List<CompanyLocation> companyLocationList) {
+        for(CompanyLocation companyLocation : companyLocationList) {
             MarkerOptions markerOptions = new MarkerOptions()
-                    .position(latLng)
+                    .position(companyLocation.getCoordinates())
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
             CircleOptions circleOptions = new CircleOptions()
-                    .center(latLng)
+                    .center(companyLocation.getCoordinates())
                     .strokeColor(Color.argb(50, 70,70,70))
                     .fillColor( Color.argb(100, 150,150,150) )
                     .radius( 100.0f );
             mMap.addCircle( circleOptions );
             mMap.addMarker(markerOptions);
         }
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.disconnectFromLocationService();
     }
 }

@@ -12,5 +12,6 @@ public interface MapsPresenter {
 
     void connectToLocationService();
     void disconnectFromLocationService();
-    void fetchGeofences();
+    void fetchCompanyLocations();
+    void onMapReady();
 }
