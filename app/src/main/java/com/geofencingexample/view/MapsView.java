@@ -1,9 +1,8 @@
-package com.geofencingexample;
+package com.geofencingexample.view;
 
 import android.location.Location;
 
-import com.google.android.gms.location.Geofence;
-import com.google.android.gms.maps.model.LatLng;
+import com.geofencingexample.model.CompanyLocation;
 
 import java.util.List;
 

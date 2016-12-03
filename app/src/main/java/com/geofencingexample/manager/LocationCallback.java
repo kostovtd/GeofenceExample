@@ -1,4 +1,4 @@
-package com.geofencingexample;
+package com.geofencingexample.manager;
 
 import android.location.Location;
 

@@ -1,13 +1,14 @@
-package com.geofencingexample;
+package com.geofencingexample.view;
 
 import android.graphics.Color;
 import android.location.Location;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v4.graphics.drawable.TintAwareDrawable;
-import android.util.Log;
+import android.support.v4.app.FragmentActivity;
 
-import com.google.android.gms.location.Geofence;
+import com.geofencingexample.R;
+import com.geofencingexample.model.CompanyLocation;
+import com.geofencingexample.presenter.MapsPresenter;
+import com.geofencingexample.presenter.MapsPresenterImpl;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;

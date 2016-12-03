@@ -1,4 +1,4 @@
-package com.geofencingexample;
+package com.geofencingexample.manager;
 
 import android.Manifest;
 import android.app.PendingIntent;
@@ -7,8 +7,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NavUtils;
 
+import com.geofencingexample.service.GeofenceTransitionsIntentService;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.Geofence;

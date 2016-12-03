@@ -1,10 +1,16 @@
-package com.geofencingexample;
+package com.geofencingexample.presenter;
 
 import android.content.Context;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
+import com.geofencingexample.manager.GeofenceCallback;
+import com.geofencingexample.manager.GeofencingManager;
+import com.geofencingexample.manager.GoogleLocationApiManager;
+import com.geofencingexample.manager.LocationCallback;
+import com.geofencingexample.model.CompanyLocation;
+import com.geofencingexample.view.MapsView;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -15,7 +21,7 @@ import java.util.List;
  * Created by todor.kostov on 20.10.2016 г..
  */
 
-public class MapsPresenterImpl implements MapsPresenter, LocationCallback, GeofenceCallback{
+public class MapsPresenterImpl implements MapsPresenter, LocationCallback, GeofenceCallback {
 
     private static final String TAG = MapsPresenterImpl.class.getSimpleName();
     private MapsView view;
@@ -114,6 +120,6 @@ public class MapsPresenterImpl implements MapsPresenter, LocationCallback, Geofe
 
     @Override
     public void onMapReady() {
-        googleLocationApiManager.connect();
+        connectToLocationService();
     }
 }

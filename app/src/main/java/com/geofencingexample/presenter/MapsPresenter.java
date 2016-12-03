@@ -1,8 +1,4 @@
-package com.geofencingexample;
-
-import com.google.android.gms.location.Geofence;
-
-import java.util.List;
+package com.geofencingexample.presenter;
 
 /**
  * Created by todor.kostov on 20.10.2016 г..

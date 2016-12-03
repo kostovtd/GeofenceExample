@@ -1,4 +1,4 @@
-package com.geofencingexample;
+package com.geofencingexample.model;
 
 /**
  * Created by todor.kostov on 27.10.2016 г..

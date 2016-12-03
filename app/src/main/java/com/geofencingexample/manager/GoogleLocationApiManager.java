@@ -1,4 +1,4 @@
-package com.geofencingexample;
+package com.geofencingexample.manager;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
